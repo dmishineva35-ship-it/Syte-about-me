@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обратная связь - Дарья Мишинёва</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="personal.html">Обо мне</a></li>
+                <li><a href="hobbies.html">Хобби</a></li>
+                <li><a href="contacts.html">Контакты</a></li>
+                <li><a href="feedback.html">Обратная связь</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="content-main">
+            <h1>Форма обратной связи</h1>
+            <p>Поделитесь пожеланиями (можно просто комплимент).</p>
+            <form>
+                <input type="text" placeholder="Ваше имя" required>
+                <input type="email" placeholder="Email" required>
+                <textarea placeholder="Сообщение" maxlength="10000" rows="8" required></textarea>
+                <button type="submit">Отправить</button>
+            </form>
+        </div>
+    </main>
+    <footer><p>&copy; 2026 Дарья Мишинёва, Воронеж</p></footer>
+    <script>
+        document.querySelector('form').addEventListener('submit', e => {
+            e.preventDefault(); alert('Спасибо!');
+        });
+    </script>
+</body>
+</html>
