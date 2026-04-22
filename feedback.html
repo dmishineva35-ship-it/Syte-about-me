@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обратная связь - Дарья Мишинёва</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .field-row { position: relative; margin-bottom: 1rem; }
+        .field-row input, .field-row textarea { margin-bottom: 0; padding-right: 42px; }
+        .error-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid #d93025;
+            color: #d93025;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            background: #fff;
+            cursor: help;
+            line-height: 1;
+            z-index: 2;
+        }
+        .field-row textarea + .error-icon { top: 18px; transform: none; }
+        .field-row.error .error-icon { display: flex; }
+        .field-row input.error-input,
+        .field-row textarea.error-input { border-color: #d93025; box-shadow: 0 0 0 3px rgba(217, 48, 37, 0.12); }
+        .tooltip {
+            position: absolute;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #fff;
+            border: 1px solid #d93025;
+            color: #b00020;
+            padding: 8px 10px;
+            border-radius: 10px;
+            white-space: nowrap;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+            font-size: 0.9rem;
+            display: none;
+            z-index: 10;
+        }
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%) rotate(45deg);
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border-right: 1px solid #d93025;
+            border-top: 1px solid #d93025;
+        }
+        .error-icon:hover + .tooltip { display: block; }
+        .centered-head { text-align: center; margin-bottom: 1.5rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="personal.html">Обо мне</a></li>
+                <li><a href="hobbies.html">Хобби</a></li>
+                <li><a href="contacts.html">Контакты</a></li>
+                <li><a href="feedback.html">Обратная связь</a></li>
+                <li><a href="reviews.html">Отзывы</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="content-main">
+            <div class="centered-head">
+                <h1>Форма обратной связи</h1>
+                <p>Оставьте пожелание или сообщение.</p>
+            </div>
+
+            <form id="feedbackForm" novalidate>
+                <div class="field-row" id="nameRow">
+                    <input type="text" id="name" placeholder="Имя">
+                    <span class="error-icon" id="nameIcon">!</span>
+                    <span class="tooltip" id="nameTip">Обязательно к заполнению!</span>
+                </div>
+
+                <div class="field-row" id="emailRow">
+                    <input type="email" id="email" placeholder="Email">
+                    <span class="error-icon" id="emailIcon">!</span>
+                    <span class="tooltip" id="emailTip">Обязательно к заполнению!</span>
+                </div>
+
+                <div class="field-row" id="commentRow">
+                    <textarea id="comment" placeholder="Комментарий" maxlength="10000"></textarea>
+                    <span class="error-icon" id="commentIcon">!</span>
+                    <span class="tooltip" id="commentTip">Обязательно к заполнению!</span>
+                </div>
+
+                <button type="submit">Отправить</button>
+            </form>
+        </div>
+    </main>
+
+    <footer><p>&copy; 2026 Дарья Мишинёва, Воронеж</p></footer>
+
+    <script>
+        const form = document.getElementById('feedbackForm');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const commentInput = document.getElementById('comment');
+        const nameRow = document.getElementById('nameRow');
+        const emailRow = document.getElementById('emailRow');
+        const commentRow = document.getElementById('commentRow');
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function setFieldError(row, input, show) {
+            row.classList.toggle('error', show);
+            input.classList.toggle('error-input', show);
+        }
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+            const comment = commentInput.value.trim();
+            let hasError = false;
+
+            setFieldError(nameRow, nameInput, false);
+            setFieldError(emailRow, emailInput, false);
+            setFieldError(commentRow, commentInput, false);
+
+            if (!name) { setFieldError(nameRow, nameInput, true); hasError = true; }
+            if (!email || !isValidEmail(email)) { setFieldError(emailRow, emailInput, true); hasError = true; }
+            if (!comment) { setFieldError(commentRow, commentInput, true); hasError = true; }
+
+            if (hasError) return;
+
+            const reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
+            reviews.unshift({ name, email, comment, date: new Date().toLocaleDateString('ru-RU') });
+            localStorage.setItem('reviews', JSON.stringify(reviews));
+            alert(`Здравствуйте, ${name}! Спасибо за сообщение. Ваш email: ${email}.`);
+            form.reset();
+        });
+    </script>
+</body>
+</html>

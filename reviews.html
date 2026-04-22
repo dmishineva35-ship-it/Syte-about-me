@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отзывы - Дарья Мишинёва</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .wall { max-width: 1000px; margin: 0 auto; }
+        .review-head { text-align:center; margin-bottom: 0.5rem; }
+        .review-sub { text-align:center; opacity: .85; margin-bottom: 1.5rem; }
+        .review-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+        .review-card {
+            background: #fff;
+            border-radius: 18px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 1px solid rgba(102,126,234,0.12);
+            position: relative;
+            overflow: hidden;
+        }
+        .review-card::before { content:''; position:absolute; top:0; left:0; height:5px; width:100%; background: var(--primary); }
+        .review-meta { font-size: .95rem; color: #667; margin-bottom: .75rem; }
+        .review-text { font-size: 1rem; color: #333; line-height: 1.6; white-space: pre-wrap; }
+        .empty { text-align:center; opacity:.8; padding: 2rem 0; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="personal.html">Обо мне</a></li>
+                <li><a href="hobbies.html">Хобби</a></li>
+                <li><a href="contacts.html">Контакты</a></li>
+                <li><a href="feedback.html">Обратная связь</a></li>
+                <li><a href="reviews.html">Отзывы</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="wall">
+            <h1 class="review-head">Отзывы</h1>
+            <p class="review-sub">Комментарии от постетилей сайта.</p>
+            <div class="review-board" id="reviewBoard"></div>
+            <p class="empty" id="emptyState" style="display:none;">Пока отзывов нет.</p>
+        </div>
+    </main>
+
+    <footer><p>&copy; 2026 Дарья Мишинёва, Воронеж</p></footer>
+
+    <script>
+        const reviewBoard = document.getElementById('reviewBoard');
+        const emptyState = document.getElementById('emptyState');
+        const reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
+
+        if (!reviews.length) {
+            emptyState.style.display = 'block';
+        } else {
+            reviewBoard.innerHTML = reviews.map(r => `
+                <div class="review-card">
+                    <div class="review-meta">${r.name} · ${r.date} · ${r.email}</div>
+                    <div class="review-text">${r.comment}</div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
