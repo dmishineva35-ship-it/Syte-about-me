@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обо мне - Дарья Мишинёва</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .about-wrap { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 320px 1fr; gap: 2rem; align-items: start; }
+        .photo-box {
+            padding: 6px;
+            border-radius: 28px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            box-shadow: var(--shadow);
+            animation: popIn 0.8s ease;
+        }
+        .about-photo { width: 100%; max-width: 320px; border-radius: 22px; display:block; }
+        .about-card { background: #fff; border-radius: 24px; box-shadow: var(--shadow); padding: 2rem; animation: fadeIn 0.8s ease; }
+        .about-card h1 { margin-bottom: 1rem; }
+        .info-grid { display: grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+        .info-item { background: #f8f9ff; border-radius: 16px; padding: 1rem 1.1rem; border: 1px solid rgba(102,126,234,.12); }
+        .info-item strong { display: block; color: #667eea; margin-bottom: .35rem; }
+        .about-text { margin-top: 1rem; line-height: 1.8; }
+        .section-title { margin-top: 1.5rem; margin-bottom: .75rem; color: #667eea; font-size: 1.2rem; }
+        .qualities { display: flex; flex-wrap: wrap; gap: .75rem; }
+        .tag { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; padding: .6rem .9rem; border-radius: 999px; font-size: .95rem; opacity: 0; animation: tagIn .5s ease forwards; }
+        .tag:nth-child(1){ animation-delay:.05s; }
+        .tag:nth-child(2){ animation-delay:.15s; }
+        .tag:nth-child(3){ animation-delay:.25s; }
+        .tag:nth-child(4){ animation-delay:.35s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes popIn { from { opacity: 0; transform: scale(.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes tagIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 768px) {
+            .about-wrap { grid-template-columns: 1fr; }
+            .info-grid { grid-template-columns: 1fr; }
+            .photo-box { max-width: 240px; margin: 0 auto; }
+            .about-photo { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="personal.html">Обо мне</a></li>
+                <li><a href="hobbies.html">Хобби</a></li>
+                <li><a href="contacts.html">Контакты</a></li>
+                <li><a href="feedback.html">Обратная связь</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="about-wrap">
+            <div class="photo-box">
+                <img class="about-photo" src="myphoto.jpg" alt="Дарья Мишинёва">
+            </div>
+
+            <div class="about-card">
+                <h1>Дарья Мишинёва</h1>
+                <p class="about-text">Я учусь в ВГУ на факультете компьютерных наук и развиваюсь в сфере программирования и веб-разработки. Люблю создавать красивые и полезные сайты, а ещё учиться новому и делать проекты, которые действительно нравятся.</p>
+
+                <div class="info-grid">
+                    <div class="info-item"><strong>Возраст</strong><span>18 лет</span></div>
+                    <div class="info-item"><strong>Город</strong><span>Воронеж, Россия</span></div>
+                    <div class="info-item"><strong>Образование</strong><span>ВГУ (ФКН), компьютерная безопасность</span></div>
+                    <div class="info-item"><strong>Опыт работы</strong><span>Отсутствует</span></div>
+                </div>
+
+                <p class="about-text">Я изучаю Java, Python, HTML и CSS. Люблю решать задачи, создавать сайты и приложения. В будущем хочу стать разработчиком и работать над интересными IT-проектами. Чтобы узнать меня получше, можно написать мне в любое удобное время — буду рада новым знакомствам!</p>
+
+                <div class="section-title">Мои качества</div>
+                <div class="qualities">
+                    <span class="tag"><span class="emoji">💖</span>Добрая</span>
+                    <span class="tag"><span class="emoji">🤝</span>Отзывчивая</span>
+                    <span class="tag"><span class="emoji">😄</span>С юмором</span>
+                    <span class="tag"><span class="emoji">✨</span>Всегда помогу</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer><p>&copy; 2026 Дарья Мишинёва, Воронеж</p></footer>
+</body>
+</html>
