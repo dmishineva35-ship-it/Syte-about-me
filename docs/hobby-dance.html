@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Танцы - Дарья Мишинёва</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .page-wrap { max-width: 1100px; margin: 0 auto; }
+        .back { display:inline-block; margin-bottom:1rem; text-decoration:none; color:#667eea; font-weight:700; }
+        .hero-card { background:#fff; border-radius:24px; box-shadow: var(--shadow); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .hero-top { display:flex; gap:1rem; align-items:center; margin-bottom:1rem; }
+        .icon { width:56px; height:56px; border-radius:18px; display:flex; align-items:center; justify-content:center; font-size:1.6rem; color:#fff; background: linear-gradient(135deg, #667eea, #764ba2); }
+        .desc { line-height:1.8; color:#444; }
+        .gallery { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1rem; }
+        .ph { border-radius:20px; overflow:hidden; box-shadow: var(--shadow); background:#fff; }
+        .ph img { width:100%; height:260px; object-fit:cover; display:block; }
+        .ph p { padding: .9rem 1rem; margin:0; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="hobbies.html">Хобби</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="page-wrap">
+            <a class="back" href="hobbies.html">← Назад к хобби</a>
+            <div class="hero-card">
+                <div class="hero-top">
+                    <div class="icon">💃</div>
+                    <div>
+                        <h1 style="margin:0;">Танцы</h1>
+                        <p style="margin:.25rem 0 0; opacity:.8;">То, что мне действительно нравится</p>
+                    </div>
+                </div>
+                <div class="desc">Современные направления, хореография и красивые постановки.</div>
+            </div>
+            <div class="gallery">
+                <div class="ph"><img src="dance1.jpg" alt="Танцы 1"><p>Репетиция и движения</p></div>
+                <div class="ph"><img src="dance2.jpg" alt="Танцы 2"><p>Сцена и выступления</p></div>
+            </div>
+        </div>
+    </main>
+    <footer><p>&copy; 2026 Дарья Мишинёва, Воронеж</p></footer>
+</body>
+</html>
