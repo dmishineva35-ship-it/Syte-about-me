@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обратная связь - Дарья Мишинёва</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* базовые стили, адаптация под темную/светлую тему не требуется, сохраняем облик */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f5f7fc;
+            color: #1e293b;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 2rem;
+            padding: 1rem 2rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #2c3e66;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: #4a90e2;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem 1rem;
+        }
+
+        footer {
+            background: #eef2f9;
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.85rem;
+            color: #5b6e8c;
+            margin-top: 2rem;
+        }
+
+        .feedback-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.05);
+        }
+
+        .centered-head {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .centered-head h1 {
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .centered-head p {
+            color: #5b6e8c;
+        }
+
+        .field-row {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .field-row input, .field-row textarea {
+            width: 100%;
+            padding: 12px 42px 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: #fefefe;
+            transition: all 0.2s ease;
+        }
+
+        .field-row input:focus, .field-row textarea:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74,144,226,0.15);
+        }
+
+        .field-row textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .error-icon {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #fff0f0;
+            border: 1.5px solid #d93025;
+            color: #d93025;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: help;
+            z-index: 2;
+        }
+
+        .field-row textarea + .error-icon {
+            top: 18px;
+            transform: none;
+        }
+
+        .field-row.error .error-icon {
+            display: flex;
+        }
+
+        .field-row input.error-input,
+        .field-row textarea.error-input {
+            border-color: #d93025;
+            background: #fff9f9;
+        }
+
+        .tooltip {
+            position: absolute;
+            right: 48px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #1e293b;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            white-space: nowrap;
+            font-size: 0.7rem;
+            font-weight: 400;
+            display: none;
+            z-index: 20;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            pointer-events: none;
+        }
+
+        .field-row textarea + .error-icon + .tooltip {
+            top: 18px;
+            transform: none;
+            white-space: normal;
+            max-width: 260px;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%) rotate(45deg);
+            width: 8px;
+            height: 8px;
+            background: #1e293b;
+        }
+
+        .error-icon:hover + .tooltip {
+            display: block;
+        }
+
+        button {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            width: 100%;
+        }
+
+        button:hover {
+            background: #2c6eb0;
+        }
+
+        .email-hint {
+            font-size: 0.7rem;
+            color: #6c86a3;
+            margin-top: 6px;
+            padding-left: 6px;
+        }
+
+        /* подсказки доменов больше не нужны, удаляем стили, но оставим нейтрально */
+        .domain-suggestions {
+            display: none;
+        }
+
+        .success-message {
+            background: #2b9348;
+            color: white;
+            padding: 14px 20px;
+            border-radius: 40px;
+            margin-bottom: 1.2rem;
+            text-align: center;
+            font-weight: 500;
+            animation: fadeOut 3.5s forwards;
+            backdrop-filter: blur(2px);
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; transform: translateY(0); }
+            70% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; visibility: hidden; transform: translateY(-8px); }
+        }
+
+        .reviews-section {
+            margin-top: 2.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #e9edf2;
+        }
+
+        .reviews-section h2 {
+            text-align: center;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+            font-weight: 500;
+        }
+
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .review-card {
+            background: #fafcff;
+            border-radius: 20px;
+            padding: 1.2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            transition: all 0.2s ease;
+            border-left: 4px solid #4a90e2;
+            border: 1px solid #edf2f7;
+        }
+
+        .review-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.05);
+            background: #ffffff;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 0.5rem;
+        }
+
+        .review-name {
+            font-weight: 700;
+            color: #2c5282;
+            font-size: 1rem;
+        }
+
+        .review-date {
+            font-size: 0.7rem;
+            color: #8ba0bc;
+        }
+
+        .review-email {
+            font-size: 0.7rem;
+            color: #5b6e8c;
+            margin: 0.3rem 0;
+            word-break: break-all;
+            background: #f1f4f9;
+            padding: 4px 8px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+
+        .review-comment {
+            color: #2d3e5f;
+            font-size: 0.85rem;
+            line-height: 1.45;
+            margin-top: 0.7rem;
+            word-break: break-word;
+        }
+
+        .empty-reviews {
+            text-align: center;
+            color: #8fa0bb;
+            padding: 2rem;
+            grid-column: 1 / -1;
+            font-style: italic;
+        }
+
+        .info-note {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #99aec9;
+            margin-top: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="personal.html">Обо мне</a></li>
+                <li><a href="hobbies.html">Хобби</a></li>
+                <li><a href="contacts.html">Контакты</a></li>
+                <li><a href="feedback.html">Обратная связь</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="feedback-container">
+            <div class="centered-head">
+                <h1>Форма обратной связи</h1>
+                <p>Оставьте пожелание или сообщение — я обязательно его прочитаю ✨</p>
+            </div>
+
+            <form id="feedbackForm" novalidate>
+                <div class="field-row" id="nameRow">
+                    <input type="text" id="name" placeholder="Имя" autocomplete="name">
+                    <span class="error-icon" id="nameIcon">!</span>
+                    <span class="tooltip" id="nameTip">Имя обязательно (минимум 2 символа)</span>
+                </div>
+
+                <div class="field-row" id="emailRow">
+                    <input type="email" id="email" placeholder="Email" autocomplete="email">
+                    <span class="error-icon" id="emailIcon">!</span>
+                    <span class="tooltip" id="emailTip">Введите корректный email (например, name@domain.com, user@mail.qq.co.uk)</span>
+                    <div class="email-hint">📧 Допустим любой домен: example.org, my.site.ru, user@domain.zone, mail@домен.рф и т.д.</div>
+                </div>
+
+                <div class="field-row" id="commentRow">
+                    <textarea id="comment" placeholder="Ваш комментарий или пожелание..." maxlength="5000"></textarea>
+                    <span class="error-icon" id="commentIcon">!</span>
+                    <span class="tooltip" id="commentTip">Комментарий не менее 3 символов</span>
+                </div>
+
+                <button type="submit">Отправить отзыв</button>
+            </form>
+
+            <!-- Блок с отзывами -->
+            <div class="reviews-section">
+                <h2>📝 Отзывы посетителей</h2>
+                <div id="reviewsContainer" class="reviews-grid">
+                    <div class="empty-reviews">Загрузка...</div>
+                </div>
+                <div class="info-note">💾 Отзывы сохраняются в вашем браузере (локальное хранилище) и видны только вам</div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Дарья Мишинёва, Воронеж</p>
+    </footer>
+
+    <script>
+        // НОВАЯ ВАЛИДАЦИЯ EMAIL: принимает ЛЮБЫЕ домены (включая многоуровневые, любые TLD, даже кириллические)
+        // Разрешены: английские буквы, цифры, точки, дефисы, подчеркивания в локальной части (стандартное правило)
+        // домен должен содержать минимум одну точку и корректные символы после @ (буквы, цифры, дефисы, точки)
+        // Также пропускаем домены с кириллицей (например, user@пример.рф), современные браузеры поддерживают IDNA.
+        
+        function isValidEmailAnyDomain(email) {
+            if (!email || typeof email !== 'string') return false;
+            email = email.trim();
+            if (email.length > 254) return false; // максимальная длина email по RFC
+            
+            const atIndex = email.indexOf('@');
+            if (atIndex === -1) return false;
+            
+            const localPart = email.substring(0, atIndex);
+            const domainPart = email.substring(atIndex + 1);
+            
+            if (localPart.length === 0 || domainPart.length === 0) return false;
+            if (localPart.length > 64) return false;
+            
+            // Валидация локальной части: разрешены a-z A-Z 0-9 . _ - (но нельзя начинать/заканчивать точкой, и нельзя две точки подряд)
+            // плюс поддерживаются кавычки? упростим: базовые правила для обычных адресов
+            const localRegex = /^[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]$|^[a-zA-Z0-9]$/;
+            if (!localRegex.test(localPart)) {
+                // дополнительная проверка если localPart содержит точки внутри разрешённые
+                if (localPart.includes('..')) return false;
+                // разрешим одиночные точки между, но не начало/конец
+                if (localPart.startsWith('.') || localPart.endsWith('.')) return false;
+                // проверим каждый символ на допустимый набор
+                for (let ch of localPart) {
+                    const code = ch.charCodeAt(0);
+                    const isLetter = (code >= 65 && code <= 90) || (code >= 97 && code <= 122);
+                    const isDigit = (code >= 48 && code <= 57);
+                    const isAllowedSym = ch === '.' || ch === '-' || ch === '_';
+                    if (!isLetter && !isDigit && !isAllowedSym) return false;
+                }
+            }
+            
+            // ---- ГЛАВНОЕ ИЗМЕНЕНИЕ: проверка домена становится либеральной ---
+            // домен может содержать буквы a-z, цифры, дефисы, точки и даже кириллицу (в реальности браузеры конвертируют, мы разрешаем юникод)
+            // но чтобы не блокировать реальные адреса — используем расширенное регулярное выражение.
+            // Домен должен содержать хотя бы одну точку и не начинаться/заканчиваться точкой, не содержать два дефиса подряд? упростим
+            if (domainPart.length < 3) return false;
+            if (domainPart.startsWith('.') || domainPart.endsWith('.')) return false;
+            if (domainPart.includes('..')) return false;
+            
+            // разрешаем буквы разных алфавитов (включая кириллицу), цифры, дефисы, точки.
+            // Также разрешаем поддомены любой вложенности: domain.zone.one, co.uk, xyz.abc.site
+            // проверка на недопустимые символы: пробелы, спецсимволы типа @, #, $, %, &, *, +, =, <, >, /, \, |, ~, `, ^, ?, !, ', ", {, }, [, ], (, ), ;, : , и запятые не должны быть в домене.
+            const forbiddenInDomain = /[\s@#\$%\^\&\*\(\)\+=\[\]\{\}\\\|;:,<>/?`~'"!]/;
+            if (forbiddenInDomain.test(domainPart)) return false;
+            
+            // Дополнительно: проверка что каждая часть домена (между точками) начинается и заканчивается буквой/цифрой, но кириллица тоже ок.
+            const domainSegments = domainPart.split('.');
+            for (let seg of domainSegments) {
+                if (seg.length === 0) return false;
+                // каждый сегмент должен состоять из допустимых символов (буквы любые, цифры, дефис)
+                // дефис не может быть в начале или в конце сегмента
+                if (seg.startsWith('-') || seg.endsWith('-')) return false;
+                // разрешаем буквы любых алфавитов (Unicode property), цифры
+                // упростим: любой символ кроме запрещённых выше уже пропущен, но проверим что нет недопустимых дефисов подряд
+                if (seg.includes('--')) return false;
+                // также убедимся, что сегмент не состоит только из цифр? разрешим числовые домены? да, технически возможно (например 123.com)
+                // но разрешим.
+            }
+            
+            return true;
+        }
+        
+        // детальное сообщение для пользователя
+        function getEmailErrorMessageFlex(email) {
+            if (!email) return 'Email обязателен для обратной связи';
+            email = email.trim();
+            if (email.length > 254) return 'Слишком длинный email (макс. 254 символа)';
+            const atIndex = email.indexOf('@');
+            if (atIndex === -1) return 'Email должен содержать символ @ (например, name@domain.com)';
+            const localPart = email.substring(0, atIndex);
+            const domainPart = email.substring(atIndex + 1);
+            if (localPart.length === 0) return 'Введите часть до "@"';
+            if (localPart.length > 64) return 'Локальная часть не может быть длиннее 64 символов';
+            if (localPart.startsWith('.') || localPart.endsWith('.')) return 'Локальная часть не может начинаться или заканчиваться точкой';
+            if (localPart.includes('..')) return 'Локальная часть не может содержать две точки подряд';
+            // проверка допустимых символов локальной части
+            for (let ch of localPart) {
+                const code = ch.charCodeAt(0);
+                const isLetter = (code >= 65 && code <= 90) || (code >= 97 && code <= 122);
+                const isDigit = (code >= 48 && code <= 57);
+                const isAllowed = (ch === '.' || ch === '-' || ch === '_');
+                if (!isLetter && !isDigit && !isAllowed) {
+                    return 'Локальная часть: только английские буквы, цифры, точки, дефисы, подчёркивания';
+                }
+            }
+            
+            if (domainPart.length === 0) return 'Введите домен после "@" (например, gmail.com, my.domain.ru)';
+            if (domainPart.startsWith('.') || domainPart.endsWith('.')) return 'Домен не может начинаться или заканчиваться точкой';
+            if (domainPart.includes('..')) return 'Домен не может содержать две точки подряд';
+            const forbidden = /[\s@#\$%\^\&\*\(\)\+=\[\]\{\}\\\|;:,<>/?`~'"!]/;
+            if (forbidden.test(domainPart)) return 'Домен содержит недопустимые символы (разрешены буквы, цифры, дефисы, точки)';
+            const segments = domainPart.split('.');
+            for (let seg of segments) {
+                if (seg.length === 0) return 'Домен содержит пустой сегмент (например, две точки подряд)';
+                if (seg.startsWith('-') || seg.endsWith('-')) return 'Сегмент домена не может начинаться или заканчиваться дефисом';
+                if (seg.includes('--')) return 'Сегмент домена не может содержать два дефиса подряд';
+            }
+            return 'Email имеет неверный формат. Примеры корректных: hello@world.com, name@mail.co.uk, user@домен.рф';
+        }
+        
+        // DOM элементы
+        const form = document.getElementById('feedbackForm');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const commentInput = document.getElementById('comment');
+        const nameRow = document.getElementById('nameRow');
+        const emailRow = document.getElementById('emailRow');
+        const commentRow = document.getElementById('commentRow');
+        const reviewsContainer = document.getElementById('reviewsContainer');
+        
+        function setFieldError(row, input, show, customTip = null) {
+            row.classList.toggle('error', show);
+            input.classList.toggle('error-input', show);
+            if (customTip && show) {
+                const tooltip = row.querySelector('.tooltip');
+                if (tooltip) tooltip.textContent = customTip;
+            } else if (!customTip && show) {
+                // если не передан кастом, но вернем дефолтное из data
+                const defTip = row.querySelector('.tooltip')?.getAttribute('data-default');
+                if (defTip && row.querySelector('.tooltip')) row.querySelector('.tooltip').textContent = defTip;
+            }
+        }
+        
+        // инициализация подписей подсказок
+        function initTooltips() {
+            const nameTip = nameRow.querySelector('.tooltip');
+            if (nameTip) nameTip.setAttribute('data-default', 'Имя обязательно (минимум 2 символа)');
+            const emailTip = emailRow.querySelector('.tooltip');
+            if (emailTip) emailTip.setAttribute('data-default', 'Введите корректный email (любой домен)');
+            const commentTip = commentRow.querySelector('.tooltip');
+            if (commentTip) commentTip.setAttribute('data-default', 'Комментарий не менее 3 символов');
+        }
+        initTooltips();
+        
+        function validateNameField() {
+            const name = nameInput.value.trim();
+            if (name.length >= 2) {
+                setFieldError(nameRow, nameInput, false);
+                return true;
+            } else if (name.length > 0 && name.length < 2) {
+                setFieldError(nameRow, nameInput, true, 'Имя минимум 2 символа');
+                return false;
+            } else if (name.length === 0) {
+                setFieldError(nameRow, nameInput, false);
+                return false;
+            }
+            return false;
+        }
+        
+        function validateEmailField() {
+            const email = emailInput.value.trim();
+            if (email === "") {
+                setFieldError(emailRow, emailInput, false);
+                return false;
+            }
+            const isValid = isValidEmailAnyDomain(email);
+            if (!isValid) {
+                const errMsg = getEmailErrorMessageFlex(email);
+                setFieldError(emailRow, emailInput, true, errMsg);
+                emailRow.querySelector('.tooltip').textContent = errMsg;
+                return false;
+            } else {
+                setFieldError(emailRow, emailInput, false);
+                emailRow.querySelector('.tooltip').textContent = 'Введите корректный email (любой домен)';
+                return true;
+            }
+        }
+        
+        function validateCommentField() {
+            const comment = commentInput.value.trim();
+            if (comment.length >= 3) {
+                setFieldError(commentRow, commentInput, false);
+                return true;
+            } else if (comment.length > 0 && comment.length < 3) {
+                setFieldError(commentRow, commentInput, true, 'Комментарий минимум 3 символа');
+                return false;
+            } else {
+                setFieldError(commentRow, commentInput, false);
+                return false;
+            }
+        }
+        
+        // события live-проверки
+        nameInput.addEventListener('input', validateNameField);
+        emailInput.addEventListener('input', validateEmailField);
+        commentInput.addEventListener('input', validateCommentField);
+        
+        // загрузка отзывов из localStorage
+        function loadReviews() {
+            const stored = localStorage.getItem('reviews_daria');
+            let reviews = [];
+            if (stored) {
+                try {
+                    reviews = JSON.parse(stored);
+                } catch(e) { reviews = []; }
+            }
+            if (!reviews.length) {
+                reviewsContainer.innerHTML = '<div class="empty-reviews">🌟 Пока нет отзывов. Напишите что-нибудь! 🌟</div>';
+                return;
+            }
+            reviewsContainer.innerHTML = reviews.map(review => `
+                <div class="review-card">
+                    <div class="review-header">
+                        <span class="review-name">${escapeHtml(review.name)}</span>
+                        <span class="review-date">${review.date || 'недавно'}</span>
+                    </div>
+                    <div class="review-email">📧 ${escapeHtml(review.email)}</div>
+                    <div class="review-comment">💬 ${escapeHtml(review.comment)}</div>
+                </div>
+            `).join('');
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+                return c;
+            });
+        }
+        
+        function showSuccessMessage(name, email) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.textContent = `Здравствуйте, ${name}! Спасибо за ваше сообщение. Ответ придёт на ${email} ✨`;
+            const container = form.parentElement;
+            container.insertBefore(successDiv, form);
+            setTimeout(() => successDiv.remove(), 3500);
+        }
+        
+        // сохранить отзыв
+        function saveReview(name, email, comment) {
+            const stored = localStorage.getItem('reviews_daria');
+            let reviews = stored ? JSON.parse(stored) : [];
+            const newReview = {
+                name: name.trim(),
+                email: email.trim(),
+                comment: comment.trim(),
+                date: new Date().toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })
+            };
+            reviews.unshift(newReview);
+            // храним не более 50 последних
+            if (reviews.length > 50) reviews = reviews.slice(0, 50);
+            localStorage.setItem('reviews_daria', JSON.stringify(reviews));
+            loadReviews();
+        }
+        
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+            const comment = commentInput.value.trim();
+            
+            let isNameValid = (name.length >= 2);
+            let isEmailValid = isValidEmailAnyDomain(email);
+            let isCommentValid = (comment.length >= 3);
+            
+            if (!isNameValid) {
+                setFieldError(nameRow, nameInput, true, 'Имя обязательно (минимум 2 символа)');
+                nameRow.querySelector('.tooltip').textContent = 'Имя обязательно (минимум 2 символа)';
+            } else {
+                setFieldError(nameRow, nameInput, false);
+            }
+            
+            if (!isEmailValid) {
+                const errMsg = getEmailErrorMessageFlex(email);
+                setFieldError(emailRow, emailInput, true, errMsg);
+                emailRow.querySelector('.tooltip').textContent = errMsg;
+            } else {
+                setFieldError(emailRow, emailInput, false);
+            }
+            
+            if (!isCommentValid) {
+                setFieldError(commentRow, commentInput, true, 'Комментарий минимум 3 символа');
+                commentRow.querySelector('.tooltip').textContent = 'Комментарий минимум 3 символа';
+            } else {
+                setFieldError(commentRow, commentInput, false);
+            }
+            
+            if (isNameValid && isEmailValid && isCommentValid) {
+                saveReview(name, email, comment);
+                showSuccessMessage(name, email);
+                form.reset();
+                // сбросим состояния ошибок
+                setFieldError(nameRow, nameInput, false);
+                setFieldError(emailRow, emailInput, false);
+                setFieldError(commentRow, commentInput, false);
+                // подчистим подсказки
+                emailRow.querySelector('.tooltip').textContent = 'Введите корректный email (любой домен)';
+                nameRow.querySelector('.tooltip').textContent = 'Имя обязательно (минимум 2 символа)';
+                commentRow.querySelector('.tooltip').textContent = 'Комментарий не менее 3 символов';
+            }
+        });
+        
+        // инициализация отзывов
+        loadReviews();
+    </script>
+</body>
+</html>
